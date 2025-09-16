@@ -45,7 +45,5 @@
  
  -Then inside terminal run `\l` it will display all the databases. Find the database that you created in that list.
 
-  Example :
-
   <img width="1405" height="361" alt="image" src="https://github.com/user-attachments/assets/dad763ef-5afb-4360-acac-5f14b74d2b32" />
 
