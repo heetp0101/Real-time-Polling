@@ -9,7 +9,7 @@
 
   - You can install from https://docs.docker.com/desktop/setup/install/windows-install/ 
 
-### Step 2 :  Open Docker Desktop and Run following command in command prompt
+### Step 2 : Open Docker Desktop and Run following command in command prompt
 
   - Once you open Docker Desktop, docker service will automatically starts
   - Run this command in cmd :
@@ -26,5 +26,17 @@
     -  `<POSTGRESQL DB NAME>` with your postgresql database name (It will create new database)
     
     
+### Step 3 : Verify PostgreSQL Database
+
+  - Run following command in cmd :
+    ```
+    docker ps
+    ```
+
+    This will show the all running containers in docker
+
+    Example :
+
+    <img width="1562" height="93" alt="image" src="https://github.com/user-attachments/assets/e83e45c7-e684-4d8b-b48b-2bbbb158d955" />
 
     
