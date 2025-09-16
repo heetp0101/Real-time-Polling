@@ -47,3 +47,20 @@
 
   <img width="1405" height="361" alt="image" src="https://github.com/user-attachments/assets/dad763ef-5afb-4360-acac-5f14b74d2b32" />
 
+
+
+## Project Setup 
+
+  - Follow below steps to run the project
+    
+### Step 1 :  Clone Repo
+
+  - Clone my repository
+    ```
+    git clone https://github.com/heetp0101/Real-time-Polling.git
+    ```
+
+### Step 2 : Add .env file inside root project folder
+
+  - Create .env file inside root project folder
+
