@@ -86,8 +86,9 @@
 
   - Open POSTMAN API Testing Tool and run following API Endpoints
 
-  1. `GET http://localhost:5000/users`
-     - This will fetch all the users. Currently it will display 3 users since I created 3 users
+  1. Fetch all the Users
+     - Send request `GET http://localhost:5000/users`
+     - Currently it will display 3 users since I created 3 users
        ```
        [
         {
@@ -107,5 +108,6 @@
         }
        ]
        ```
-     
+
+    
 
