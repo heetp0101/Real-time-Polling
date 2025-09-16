@@ -60,7 +60,33 @@
     git clone https://github.com/heetp0101/Real-time-Polling.git
     ```
 
-### Step 2 : Add .env file inside root project folder
+### Step 2 : Install dependencies
 
-  - Create .env file inside root project folder
+  - Run following command to install all dependencies
+    ```
+    cd Real-time-Polling
+    npm install
+    ```
+
+### Step 3 : Add .env file 
+
+  - Create .env file and add `DATABASE_URL` to connect with PostgreSQL Database
+    ```
+    DATABASE_URL="postgresql://<POSTGRESQL USERNAME>:<POSTGRESQL PASSWORD>@localhost:5432/<POSTGRESQL DB NAME>?schema=<SCHEMA NAME>"
+    ```
+
+    You can choose any name for `<SCHEMA NAME>`
+
+### Step 4 : Generate Prisma Client
+
+  - Run the following command to generate prisma client
+    ```
+    npm run prisma:generate
+    ```
+
+### Step 5 :  Run Backend (Node.js) Server
+
+    ```
+    npm run dev
+    ```
 
