@@ -20,10 +20,10 @@
 
     Replace :
 
-    `<CONTAINER NAME>` with your container name which you want to keep
-    `<POSTGRESQL PASSWORD>` with your postgresql password. Remember this password and store somewhere
-    `<POSTGRESQL USERNAME>` with your postgresql username
-    `<POSTGRESQL DB NAME>` with your postgresql database name (It will create new database)
+    -  `<CONTAINER NAME>` with your container name which you want to keep
+    -  `<POSTGRESQL PASSWORD>` with your postgresql password. Remember this password and store somewhere
+    -  `<POSTGRESQL USERNAME>` with your postgresql username
+    -  `<POSTGRESQL DB NAME>` with your postgresql database name (It will create new database)
     
     
 
