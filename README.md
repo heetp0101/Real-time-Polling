@@ -68,8 +68,6 @@
     DATABASE_URL="postgresql://postgres:postgres@localhost:5432/polling?schema=public"
     ```
 
-    You can choose any name for `<SCHEMA NAME>`
-
 ### Step 4 : Generate Prisma Client
 
   - Run the following command to generate prisma client
@@ -87,27 +85,49 @@
   - Open POSTMAN API Testing Tool and run following API Endpoints
 
   1. Fetch all the Users
-     - Send request `GET http://localhost:5000/users`
-     - Currently it will display 3 users since I created 3 users
+     
+     - To fetch all the users, send request `GET http://localhost:5000/users`
+
+  3. Add New User
+
+     - To add a new user, send request `POST http://localhost:5000/users` along with Body :
        ```
-       [
-        {
-            "id": 1,
-            "name": "Alice",
-            "email": "alice@example.com"
-        },
-        {
-            "id": 2,
-            "name": "Vrutik",
-            "email": "vrutik123@gmail.com"
-        },
-        {
-            "id": 3,
-            "name": "Chirag",
-            "email": "chirag123@gmail.com"
+       {
+         "name" : "Bob"
+         "email" : "bob123@gmail.com"
+         "password" : "bob123"
+       }
+       ```
+     - You will get response with status code 201 with `id`, `name`, and `email`
+
+  4. Get User Polls
+
+     - To fetch all the user polls along with poll options, send request `GET http://localhost:5000/polls`. You will get reponse for all the user polls with poll options.
+
+  5. Add New Poll
+
+     - To add new poll, send reuest `POST http://localhost:5000/polls` along with following Body :
+       ```
+       {
+         "question": "Which state in India has highest GDP ?",
+         "creatorId": 1,
+         "options": ["Maharashtra", "Gujarat", "Uttar Pradesh"]
         }
-       ]
        ```
 
-    
+  6. Cast a Vote
+
+     - To cast a vote send request `POST  http://localhost:5000/votes` along with following Body :
+       ```
+       {
+         "userId": 1
+         "pollOptionId": 1
+       }
+       ```
+     - Here `userId` references from `id` of User and `pollOptionId` references from `id` of PollOption     
+
+  7. Fetch Results
+
+     - To fetch the results from the specific poll by their pollId, send request  `GET http://localhost:5000/polls/1/results`, it will return `pollId`, `results` Array with `id`, `text`, `voteCount`
+
 
