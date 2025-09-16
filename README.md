@@ -39,4 +39,15 @@
 
     <img width="1562" height="93" alt="image" src="https://github.com/user-attachments/assets/e83e45c7-e684-4d8b-b48b-2bbbb158d955" />
 
-    
+  - Then run this command
+    ```
+    docker exec -it <CONTAINER NAME> psql -U <POSTGRESQL USER NAME> -d <POSTGRESQL DB NAME>
+    ```
+    When you run above command it will prompt you to database terminal e.g `<DB NAME>#`.
+ 
+ -Then inside terminal run `\l` it will display all the databases. Find the database that you created in that list.
+
+  Example :
+
+  <img width="1405" height="361" alt="image" src="https://github.com/user-attachments/assets/dad763ef-5afb-4360-acac-5f14b74d2b32" />
+
