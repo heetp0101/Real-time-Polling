@@ -1,0 +1,264 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Real-Time Poll Test</title>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+</head>
+<body>
+  <h1>Real-Time Poll</h1>
+
+  <div>
+    <p id="question">Poll Question Loading...</p>
+    <ul id="options"></ul>
+  </div>
+
+  <script>
+    const socket = io("http://localhost:5000");
+
+    // Listen for connection
+    socket.on("connect", () => {
+      console.log("✅ Connected as", socket.id);
+    });
+
+    // Listen for poll updates
+    socket.on("pollUpdated", (data) => {
+      console.log("📊 Poll updated:", data);
+
+      const optionsList = document.getElementById("options");
+      optionsList.innerHTML = "";
+
+      data.results.forEach(opt => {
+        const li = document.createElement("li");
+        li.textContent = `${opt.text}: ${opt.voteCount} votes`;
+        optionsList.appendChild(li);
+      });
+    });
+
+ //   Load poll question + options initially
+    async function loadPoll(pollId = 1) {
+      try {
+        // Fetch poll question + options
+        const resPoll = await fetch(`http://localhost:5000/polls`);
+        const polls = await resPoll.json();
+        const poll = polls.find(p => p.id === pollId);
+
+        document.getElementById("question").textContent = poll.question;
+
+        // Fetch current results
+        const resResults = await fetch(`http://localhost:5000/polls/${pollId}/results`);
+        const { results } = await resResults.json();
+
+        const optionsList = document.getElementById("options");
+        optionsList.innerHTML = "";
+
+        poll.options.forEach(opt => {
+          const li = document.createElement("li");
+          const result = results.find(r => r.id === opt.id);
+          const voteCount = result ? result.voteCount : 0;
+
+          li.textContent = `${opt.text}: ${voteCount} votes `;
+
+          const voteBtn = document.createElement("button");
+          voteBtn.textContent = "Vote";
+          voteBtn.onclick = async () => {
+            await fetch("http://localhost:5000/votes", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ userId: 1, pollOptionId: opt.id })
+            });
+          };
+
+          li.appendChild(voteBtn);
+          optionsList.appendChild(li);
+        });
+      } catch (err) {
+        console.error("Error loading poll:", err);
+      }
+    }
+
+
+    loadPoll(1); // load poll with ID 1
+  </script>
+</body>
+</html> -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Realtime Polling Test</title>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .container { margin-bottom: 30px; }
+    input, button { margin: 5px 0; }
+    ul { list-style: none; padding-left: 0; }
+    li { margin: 5px 0; }
+  </style>
+</head>
+<body>
+  <h1>Realtime Polling Test</h1>
+
+  <div class="container" id="user-section">
+    <h2>Create User</h2>
+    <input type="text" id="userName" placeholder="Name">
+    <input type="email" id="userEmail" placeholder="Email">
+    <input type="password" id="userPassword" placeholder="Password">
+    <button onclick="createUser()">Create User</button>
+    <p id="userMessage"></p>
+  </div>
+
+  <div class="container" id="poll-section">
+    <h2>Create Poll</h2>
+    <select id="userSelect"></select><br>
+    <input type="text" id="pollQuestion" placeholder="Poll Question"><br>
+    <input type="text" id="pollOptions" placeholder="Options (comma separated)"><br>
+    <button onclick="createPoll()">Create Poll</button>
+    <p id="pollMessage"></p>
+  </div>
+
+  <div class="container" id="polls-list-section">
+    <h2>Polls</h2>
+    <div id="pollsContainer"></div>
+  </div>
+
+  <script>
+    const socket = io("http://localhost:5000");
+
+    socket.on("connect", () => console.log("✅ Connected to server", socket.id));
+    socket.on("pollUpdated", (data) => {
+      console.log("📊 Poll updated:", data);
+      updatePollVotes(data.pollId, data.results);
+    });
+
+    // ======== Users ========
+    async function createUser() {
+      const name = document.getElementById("userName").value;
+      const email = document.getElementById("userEmail").value;
+      const password = document.getElementById("userPassword").value;
+
+      try {
+        const res = await fetch("http://localhost:5000/users", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          document.getElementById("userMessage").textContent = `User created: ${data.name}`;
+          loadUsers();
+        } else {
+          document.getElementById("userMessage").textContent = JSON.stringify(data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function loadUsers() {
+      const res = await fetch("http://localhost:5000/users");
+      const users = await res.json();
+      const userSelect = document.getElementById("userSelect");
+      userSelect.innerHTML = "";
+      users.forEach(u => {
+        const opt = document.createElement("option");
+        opt.value = u.id;
+        opt.textContent = u.name;
+        userSelect.appendChild(opt);
+      });
+    }
+
+    loadUsers();
+
+    // ======== Polls ========
+    async function createPoll() {
+      const creatorId = parseInt(document.getElementById("userSelect").value);
+      const question = document.getElementById("pollQuestion").value;
+      const options = document.getElementById("pollOptions").value.split(",").map(o => o.trim()).filter(o => o);
+
+      if (!creatorId || !question || options.length === 0) return alert("Fill all fields");
+
+      try {
+        const res = await fetch("http://localhost:5000/polls", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ creatorId, question, options })
+        });
+        const poll = await res.json();
+        if (res.ok) {
+          document.getElementById("pollMessage").textContent = "Poll created!";
+          loadPolls();
+        } else {
+          document.getElementById("pollMessage").textContent = JSON.stringify(poll);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function loadPolls() {
+      const res = await fetch("http://localhost:5000/polls");
+      const polls = await res.json();
+      const container = document.getElementById("pollsContainer");
+      container.innerHTML = "";
+
+      polls.forEach(poll => {
+        const div = document.createElement("div");
+        div.id = `poll-${poll.id}`;
+        const questionEl = document.createElement("h3");
+        questionEl.textContent = `${poll.question} (by ${poll.creator.name})`;
+        div.appendChild(questionEl);
+
+        const ul = document.createElement("ul");
+        poll.options.forEach(opt => {
+          const li = document.createElement("li");
+          const result = results.find(r => r.id === opt.id);
+          li.id = `poll-${poll.id}-opt-${opt.id}`;
+          li.textContent = `${opt.text} (votes: 0) `;
+
+          const voteBtn = document.createElement("button");
+          voteBtn.textContent = "Vote";
+          voteBtn.onclick = async () => {
+            const userId = parseInt(document.getElementById("userSelect").value);
+            await fetch("http://localhost:5000/votes", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ userId, pollOptionId: opt.id })
+            });
+          };
+
+          li.appendChild(voteBtn);
+          ul.appendChild(li);
+        });
+        div.appendChild(ul);
+        container.appendChild(div);
+      });
+    }
+
+    function updatePollVotes(pollId, results) {
+      results.forEach(r => {
+        const li = document.getElementById(`poll-${pollId}-opt-${r.id}`);
+        if (li) {
+          li.textContent = `${r.text} (votes: ${r.voteCount}) `;
+          const voteBtn = document.createElement("button");
+          voteBtn.textContent = "Vote";
+          voteBtn.onclick = async () => {
+            const userId = parseInt(document.getElementById("userSelect").value);
+            await fetch("http://localhost:5000/votes", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ userId, pollOptionId: r.id })
+            });
+          };
+          li.appendChild(voteBtn);
+        }
+      });
+    }
+
+    loadPolls();
+  </script>
+</body>
+</html>
