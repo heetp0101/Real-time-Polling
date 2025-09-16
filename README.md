@@ -35,8 +35,6 @@
 
     This will show the all running containers in docker
 
-    Example :
-
     <img width="1562" height="93" alt="image" src="https://github.com/user-attachments/assets/e83e45c7-e684-4d8b-b48b-2bbbb158d955" />
 
   - Then run this command
